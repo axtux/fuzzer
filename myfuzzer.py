@@ -78,6 +78,8 @@ if __name__ == '__main__':
   if argc != 4:
     usage()
   
+  if not os.path.isdir('crash'):
+    os.mkdir('crash')
   fuzz_check(sys.argv[1], sys.argv[2], sys.argv[3])
   
   print('\ndone')
