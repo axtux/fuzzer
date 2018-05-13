@@ -8,7 +8,8 @@ import subprocess
 def run(input_file):
   # static version is faster
   args = ['./converter_static', input_file, '/dev/null']
-  return subprocess.run(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+  # disable closing descriptor/restore signals for performance
+  return subprocess.Popen(args, stderr=subprocess.PIPE, bufsize=4096, close_fds=False, restore_signals=False)
 
 def file_read(filename):
   with open(filename, 'rb') as file:
@@ -56,7 +57,10 @@ def fuzz(input_seed, max_tests, to_randomize):
 
     result = run(input_file)
     out = str(result.stderr)
-    if out.find('***') != -1:
+    code = result.returncode
+    error = out.find('*') != -1
+    
+    if error:
       while os.path.isfile('crash/'+input_file):
         input_file = 'input_'+str(random.randint(0, 1e6))+'.img'
       os.rename(input_file, 'crash/'+input_file)
@@ -69,7 +73,6 @@ def usage(error=None):
   exit()
 
 if __name__ == '__main__':
-  os.chdir('..')
   argc = len(sys.argv)
   if argc != 4:
     usage()
