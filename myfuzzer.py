@@ -20,7 +20,7 @@ def file_write(filename, content):
 
 def fuzz_bytes(input_seed, to_randomize):
   bytes_array = bytearray(input_seed)
-  bytes_to_change = random.sample(range(len(bytes_array)), to_randomize)
+  bytes_to_change = random.sample(range(2, len(bytes_array)), to_randomize)
   for b in bytes_to_change:
     bytes_array[b] = random.randint(0, 255)
   return bytes_array
@@ -57,15 +57,24 @@ def fuzz(input_seed, max_tests, to_randomize):
     file_write(input_file, fuzz_input)
 
     result = run(input_file)
-    out = str(result.stderr)
-    code = result.returncode
-    error = out.find('*') != -1
+    out = result.stderr.decode('ascii').replace('\n', '. ')
     
-    if error:
-      while os.path.isfile(crash_file):
-        crash_file = 'crash/input_'+str(random.randint(0, 1e6))+'.img'
-      os.rename(input_file, crash_file)
-      print('test', i, 'crashing, saved in', crash_file, ', out', out)
+    # error if '*' in stderr
+    if out.find('*') != -1:
+      save(input_file, result.returncode, out)
+
+saved = {}
+
+def save(input_file, code, out):
+  mess = str(code) + ': ' + str(out)
+  # error already saved
+  if mess in saved:
+    return
+  saved[mess] = True
+  crash_file = 'crash/input_'+str(len(saved))+'.img'
+  os.rename(input_file, crash_file)
+  print('crash', mess, 'saved in', crash_file)
+
 
 def usage(error=None):
   if error is not None:
