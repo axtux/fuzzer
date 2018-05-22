@@ -7,13 +7,15 @@ import subprocess
 
 """
 	we use these variable to fit the fields that not interest us in the different function leading to a crash
+	These values depends on the system you are, in my case my system works in big endian.
+	It may not work if your system is little endian, in this case change the values here under
 """
 magic =  0xcdab.to_bytes(2,"little") #the number is 2 because 2*8 bits = 16 bits
 version = 0x0064.to_bytes(2,"little")
 width = 0x000002.to_bytes(4,"little")
 height = 0x000002.to_bytes(4,"little")
 size = 0x000002.to_bytes(4,"little") # this represents the number of colors ( size color table)
-
+## TODO: https://stackoverflow.com/questions/1400012/endianness-of-integers-in-python
 """
  	return the table of colors fields according to the number given in parameter
 """
