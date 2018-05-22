@@ -72,7 +72,7 @@ def usage(error=None):
   """
   if error is not None:
     print('\n\tERROR:', error)
-  print('\nusage:', sys.argv[0], 'INPUT_SEED MAX_TESTS PART_TO_RANDOMIZE')
+  print('\nusage:', sys.argv[0], 'INPUT_FILE N_TESTS PART_TO_RANDOMIZE')
   exit()
 
 
