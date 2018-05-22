@@ -15,6 +15,8 @@ is given to the converter as input file. If this file crashes the converter, a
 message is shown containing converter return code, converter error message and
 filename where this input file has been saved.
 
+The output files given by the crashes are stored in the crash folder.
+
 # Generation based fuzzer
 
 Usage
@@ -23,3 +25,5 @@ $ ./src/generation_fuzzer.py
 ```
 
 For this part, we have implemented 4 functions that always crash the Converter. The values chosen for these crashing have been found by testing multiple possibilities first. As for the previous fuzzer, we generate a new file at each function and do the same manipulations.
+
+The output files given by the crashes are stored in the crash2 folder.
