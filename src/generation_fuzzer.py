@@ -25,7 +25,6 @@ def color_table(length):
     table += random.randint(0, 0xFFFFFFFF).to_bytes(4, "little")
   return table
 
-
 def pixels(w, h):
   """
   Get pixel bytes from width and height
@@ -34,7 +33,6 @@ def pixels(w, h):
   for p in range(w * h) :
     pixels += random.randint(0, 0xFF).to_bytes(1, "little")
   return pixels
-
 
 def fuzz(fuzz_input):
   """
@@ -48,7 +46,6 @@ def fuzz(fuzz_input):
   # error if '*' in stderr
   if out.find('*') != -1:
     utils.save(CRASH_PATH, tmp_file, result.returncode, out, True)
-
 
 def fuzz_number_colors():
   """
@@ -64,7 +61,6 @@ def fuzz_number_colors():
 
   fuzz(file)
   print("\n end fuzz 1 \n")
-
 
 def fuzz_version():
   """

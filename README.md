@@ -17,4 +17,9 @@ filename where this input file has been saved.
 
 # Generation based fuzzer
 
-TODO
+Usage
+```bash
+$ ./src/generation_fuzzer.py
+```
+
+For this part, we have implemented 4 functions that always crash the Converter. The values chosen for these crashing have been found by testing multiple possibilities first. As for the previous fuzzer, we generate a new file at each function and do the same manipulations.
