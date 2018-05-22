@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import random
+
 from utils import *
 
 
@@ -10,6 +11,7 @@ def fuzz_bytes(input_seed, to_randomize):
   for b in bytes_to_change:
     bytes_array[b] = random.randint(0, 255)
   return bytes_array
+
 
 def fuzz_check(input_seed, max_tests, to_randomize):
 
@@ -22,23 +24,24 @@ def fuzz_check(input_seed, max_tests, to_randomize):
     if max_tests < 1:
       usage('MAX_TESTS should be > 0')
   except ValueError:
-    usage('"'+str(max_tests)+'" is not a valid integer')
+    usage('"' + str(max_tests) + '" is not a valid integer')
   print('Running test', max_tests, 'times')
 
   try:
-    to_randomize = round(l*float(to_randomize))
+    to_randomize = round(l * float(to_randomize))
     if to_randomize < 0 or to_randomize > l:
       usage('PART_TO_RANDOMIZE should be between 0 and 1')
   except ValueError:
-    usage('"'+to_randomize+'" is not a valid float')
+    usage('"' + to_randomize + '" is not a valid float')
   print('Randomizing', to_randomize, 'bytes\n')
 
   fuzz(input_seed, max_tests, to_randomize)
 
+
 def fuzz(input_seed, max_tests, to_randomize):
   crash_file = 'crash/input_0.img'
   input_file = 'input_0.img'
-  for i in range(1, max_tests+1):
+  for i in range(1, max_tests + 1):
     fuzz_input = fuzz_bytes(input_seed, to_randomize)
     file_write(input_file, fuzz_input)
 
@@ -48,6 +51,7 @@ def fuzz(input_seed, max_tests, to_randomize):
     # error if '*' in stderr
     if out.find('*') != -1:
       save(input_file, result.returncode, out)
+
 
 if __name__ == '__main__':
   argc = len(sys.argv)
