@@ -13,6 +13,9 @@ def run(input_file):
   args = ['./converter_static', input_file, '/dev/null']
   return subprocess.run(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
+def mkdir(path):
+  if not os.path.isdir(path):
+    os.mkdir(path)
 
 def file_read(filename):
   with open(filename, 'rb') as file:
