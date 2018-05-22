@@ -1,7 +1,7 @@
 # Mutation based fuzzer
 Usage
 ```bash
-$ ./src/mutation_based.py INPUT_FILE N_TESTS PART_TO_RANDOMIZE
+$ ./src/mutation_fuzzer.py INPUT_FILE N_TESTS PART_TO_RANDOMIZE
 ```
 
 Arguments :
