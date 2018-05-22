@@ -9,10 +9,10 @@ import subprocess
 	we use these variable to fit the fields that not interest us in the different function leading to a crash
 """
 magic =  0xcdab.to_bytes(2,"little") #the number is 2 because 2*8 bits = 16 bits
-version = 0x6400.to_bytes(2,"little")
-width = 0x020000.to_bytes(4,"little")
-height = 0x020000.to_bytes(4,"little")
-size = 0x020000.to_bytes(4,"little") # this represents the number of colors ( size color table)
+version = 0x0064.to_bytes(2,"little")
+width = 0x000002.to_bytes(4,"little")
+height = 0x000002.to_bytes(4,"little")
+size = 0x000002.to_bytes(4,"little") # this represents the number of colors ( size color table)
 
 """
  	return the table of colors fields according to the number given in parameter
@@ -69,11 +69,12 @@ def save(input_file, code, out):
 
 def fuzz(fuzz_input):
   crash_file = 'crash2/input_0.img'
-  input_file = 'input_0.img'
+  input_file = 'input_1.img'
   file_write(input_file, fuzz_input)
   result = run(input_file)
   out = result.stderr.decode('ascii').replace('\n', '. ')
   # error if '*' in stderr
+  print("\n resultat obtenu du test: ",out)
   if out.find('*') != -1:
   	save(input_file, result.returncode, out)
 
@@ -81,7 +82,10 @@ def fuzz(fuzz_input):
 def fuzz_magic_number():
   return ## TODO: test magic number ( brut force done without response)
 
-
+"""
+	This fuzzer test the number of color field.
+	It must crash when the value is upper than 0x80000000
+"""
 def fuzz_number_colors():
   print("begin fuzz 1")
   file = magic + version + width + height # we fill the different fields with good values
