@@ -3,6 +3,8 @@
 import random
 from utils import *
 
+CRASH_PATH = 'crash2'
+
 """
 	we use these variable to fit the fields that not interest us in the different function leading to a crash
 	These values depends on the system you are, in my case my system works in big endian.
@@ -43,7 +45,7 @@ def pixels(w, h):
 
 
 def fuzz(fuzz_input):
-  crash_file = 'crash2/input_0.img'
+  crash_file = CRASH_PATH + '/input_0.img'
   input_file = 'input_1.img'
   file_write(input_file, fuzz_input)
   result = run(input_file)
@@ -51,7 +53,7 @@ def fuzz(fuzz_input):
   # error if '*' in stderr
   print("\n resultat obtenu du test: ", out)
   if out.find('*') != -1:
-    save(input_file, result.returncode, out, False)
+    save(CRASH_PATH, input_file, result.returncode, out, True)
 
 
 """
@@ -91,8 +93,8 @@ def fuzz_version():
 
 if __name__ == '__main__':
 
-  if not os.path.isdir('crash'):
-    os.mkdir('crash')
+  if not os.path.isdir(CRASH_PATH):
+    os.mkdir(CRASH_PATH)
 
   fuzz_number_colors()
   fuzz_version()
