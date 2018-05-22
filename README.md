@@ -25,5 +25,7 @@ $ ./src/generation_fuzzer.py
 
 For this part, we have implemented 4 functions that always crash the Converter. The values chosen for these crashing have been found by testing multiple possibilities first. As for the previous fuzzer, we generate a new file at each function and do the same manipulations.
 
+# Release
+
 The output files given by the crashes are stored in the crash files folder.
-The files are numeroted from 0 to 3, each one correspond to the function called in the main of the file. Each one is well described by his documentation.
+The files are numbered from 0 to 3, each one correspond to the function called in the main of the file. Each one is well described by his documentation.
