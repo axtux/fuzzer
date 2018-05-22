@@ -1,9 +1,7 @@
 #!/usr/bin/python3
 
-import os
-import sys
 import random
-import subprocess
+from utils import *
 
 """
 	we use these variable to fit the fields that not interest us in the different function leading to a crash
@@ -22,10 +20,10 @@ size = 0x000002.to_bytes(4,"little") # this represents the number of colors ( si
  	return the table of colors fields according to the number given in parameter
 """
 def color_table(nbr):
-  if(nbr<1):
+  if nbr<1 :
 	  usage("the number of colors must be positive")
   table= random.randint(0,0xFFFFFFFF).to_bytes(4,"little")
-  while(nbr>1):
+  while nbr>1 :
 	  table += random.randint(0,0xFFFFFFFF).to_bytes(4,"little")
 	  nbr-=1
   return table
@@ -39,38 +37,6 @@ def pixels(w,h):
 	  pixels += random.randint(0,0xFF).to_bytes(1,"little")
   return pixels
 
-def run(input_file):
-  # static version is faster
-  args = ['./converter_static', input_file, '/dev/null']
-  return subprocess.run(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-
-def file_read(filename):
-  with open(filename, 'rb') as file:
-    return file.read()
-
-def file_write(filename, content):
-  with open(filename, 'wb') as file:
-    file.write(content)
-
-
-def usage(error=None):
-  if error is not None:
-    print('\n\tERROR:', error)
-  print('\nusage:', sys.argv[0], 'INPUT_SEED MAX_TESTS PART_TO_RANDOMIZE')
-  exit()
-
-saved = {}
-
-def save(input_file, code, out):
-  mess = str(code) + ': ' + str(out)
-  # error already saved
-  if mess in saved:
-    return
-  saved[mess] = True
-  crash_file = 'crash2/input_'+str(len(saved))+'.img'
-  os.rename(input_file, crash_file)
-  print('crash', mess, 'saved in', crash_file)
-
 def fuzz(fuzz_input):
   crash_file = 'crash2/input_0.img'
   input_file = 'input_1.img'
@@ -80,33 +46,44 @@ def fuzz(fuzz_input):
   # error if '*' in stderr
   print("\n resultat obtenu du test: ",out)
   if out.find('*') != -1:
-  	save(input_file, result.returncode, out)
+    save(input_file, result.returncode, out, False)
 
-
-def fuzz_magic_number():
-  return ## TODO: test magic number ( brut force done without response)
 
 """
-	This fuzzer test the number of color field.
-	It must crash when the value is upper than 0x80000000
+	This fuzzer test a crash value for the color number field.
+	It must crash when the value is lower than 0x80000000 and upper than 0xFFFFFFFF.
+	This is the range of negative numbers.
 """
 def fuzz_number_colors():
-  print("begin fuzz 1")
+  print("\n begin fuzz 1 \n")
   file = magic + version + width + height # we fill the different fields with good values
   crash_number = random.randint(0x80000000,0xFFFFFFFF).to_bytes(4,"little")
-  file += crash_number
-  file += color_table(10)
-  file += pixels(2, 2)
+  file += crash_number # we add the crash field
+  file += color_table(10) + pixels(2,2) # we add the others good fields
 
   fuzz(file)
-  print("end fuzz 1")
+  print("\n end fuzz 1 \n")
+
+"""
+	This fuzzer test a crash value for the version field.
+	It must crash when the value is between 0x36 and upper than 0x41.
+"""
+def fuzz_version():
+  print("\n begin fuzz 2 \n")
+  file = magic # we fill the first field with a good value
+  crash_number = random.randint(0x36,0x41).to_bytes(2,"little")
+  file += crash_number # we add the crash field
+  file += width + height + size + color_table(10) + pixels(2,2) #we add the others good fields
+
+  fuzz(file)
+  print("\n end fuzz 2 \n")
 
 if __name__ == '__main__':
 
   if not os.path.isdir('crash'):
     os.mkdir('crash')
 
-  fuzz_magic_number()
   fuzz_number_colors()
+  fuzz_version()
 
   print('\ndone')
