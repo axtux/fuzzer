@@ -1,3 +1,4 @@
+# bash file to easily compare 2 binary files
 
 if [[ $# != 2 ]]
 then

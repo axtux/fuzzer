@@ -1,3 +1,5 @@
+# move files to RAM disk for faster disk access
+
 FILES=('myfuzzer.py' 'compare.sh' 'converter_static' 'testinput.img')
 TARGET='/run/user/1000/fuzzer'
 
