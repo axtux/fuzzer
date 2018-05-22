@@ -16,6 +16,8 @@ width = 0x000002.to_bytes(4,"little")
 height = 0x000002.to_bytes(4,"little")
 size = 0x000002.to_bytes(4,"little") # this represents the number of colors ( size color table)
 ## TODO: https://stackoverflow.com/questions/1400012/endianness-of-integers-in-python
+
+
 """
  	return the table of colors fields according to the number given in parameter
 """
